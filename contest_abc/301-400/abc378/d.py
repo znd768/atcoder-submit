@@ -1,29 +1,35 @@
+# WA
 h, w, k = map(int, input().split())
 grid = [list(input()) for _ in range(h)]
 
 ans = 0
-mod = 10**9 + 7
+memo = [[-1] * w for _ in range(h)]
 
-visited = [[False]*w for _ in range(h)]
+def check_valid_point(h, w, x, y):
+  return 0 <= x < w and 0 <= y < h
 
-def run(i, j, cnt):
-  global ans
-  if cnt == k:
-    ans += 1
-    ans %= mod
-    return
-  visited[i][j] = True
-  for x, y in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
-    ni, nj = i + x, j + y
-    if 0 <= ni < h and 0 <= nj < w and not visited[ni][nj]:
-      if grid[ni][nj] == '.':
-        run(ni, nj, cnt + 1)
-  visited[i][j] = False
+def search(x, y, cnt):
+  global memo
+  if not check_valid_point(h, w, x, y):
+    return 0
+  if grid[y][x] == "#":
+    return 0
+  if memo[y][x] != -1:
+    return 0
+  memo[y][x] = cnt
+  search(x+1, y, cnt + 1)
+  search(x-1, y, cnt + 1)
+  search(x, y+1, cnt + 1)
+  search(x, y-1, cnt + 1)
 
-
-for i in range(h):
-  for j in range(w):
-    if grid[i][j] == '.':
-      run(i, j, 0)
+for y, row in enumerate(grid):
+  for x, point in enumerate(row):
+    if point == "#":
+      continue
+    else:
+      memo = [[-1] * w for _ in range(h)]
+      search(x, y, 0)
+      for row2 in memo:
+        ans += row2.count(k)
 
 print(ans)
