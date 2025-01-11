@@ -1,20 +1,29 @@
+from collections import deque
 n = int(input())
 a = list(map(int, input().split()))
-used_chars = {}
-ans = 0
+cursor = 0
+used_chars = dict()
+chars_index = deque()
 tmp_ans = 0
-i = 0
-while i < n-1:
-  if a[i] == a[i+1] and not used_chars.get(a[i], False):
-    tmp_ans += 2
-    used_chars[a[i]] = True
-    i += 2
+ans = 0
+while cursor + 1 < n:
+  if a[cursor] == a[cursor + 1] and used_chars.get(a[cursor], 0) == 0:
+    used_chars[a[cursor]] = 2
+    chars_index.append(a[cursor])
+    cursor += 2
+    tmp_ans += 1
+  elif tmp_ans > 0 and used_chars.get(a[cursor], 0) != 0:
+    tmp_ans -= 1
+    char = chars_index.popleft()
+    used_chars[char] = 0
+    chars_index.append(char)
   else:
-    ans = max(ans, tmp_ans)
-    tmp_ans = 0
-    if len(used_chars) > 0:
-      i -= 1
+    if cursor != 0 and a[cursor - 1] == a[cursor]:
+      cursor -= 1
     else:
-      i += 1
-    used_chars = {}
-print(max(ans, tmp_ans))
+      cursor += 1
+    ans = max(ans, tmp_ans*2)
+    tmp_ans = 0
+    used_chars.clear()
+ans = max(ans, tmp_ans*2)
+print(ans)

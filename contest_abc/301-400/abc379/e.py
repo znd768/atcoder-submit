@@ -1,10 +1,13 @@
 n = int(input())
-s = list(input())
+s = int(input())
 ans = 0
-memo = 1
-for idx, num in enumerate(reversed(s)):
-  ans += int(num) * memo * (n-idx)
-  memo = memo*10 + 1
-  # print(memo)
-  # ans += int(num) * (idx+1) * (10 ** (n - idx - 1))
+cnt = 1
+x = 1
+while s != 0:
+  num = s % 10
+  s //= 10
+  ans += num * x * (n-cnt+1)
+  x += 10**cnt
+  cnt += 1
+
 print(ans)

@@ -1,11 +1,11 @@
 from collections import deque
 query_num = int(input())
-querys = [list(input().split()) for _ in range(query_num)]
+queries = [list(input().split()) for _ in range(query_num)]
 
 d = deque()
 today = 0
 
-for query in querys:
+for query in queries:
   if query[0] == '1':
     d.append(today)
   elif query[0] == '2':
